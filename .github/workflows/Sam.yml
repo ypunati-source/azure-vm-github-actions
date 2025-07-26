@@ -1,0 +1,29 @@
+name: Deploy Azure VM from GitHub Actions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-vm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Create resource group
+        run: |
+          az group create --name github-rg --location eastus
+
+      - name: Create virtual machine
+        run: |
+          az vm create \
+            --resource-group github-rg \
+            --name github-vm \
+            --image UbuntuLTS \
+            --admin-username azureuser \
+            --generate-ssh-keys
