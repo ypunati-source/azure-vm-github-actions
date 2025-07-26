@@ -30,6 +30,6 @@ jobs:
           az vm create \
             --resource-group github-rg \
             --name github-vm \
-            --image UbuntuLTS \
+            --image Ubuntu2204 \
             --admin-username azureuser \
             --generate-ssh-keys
