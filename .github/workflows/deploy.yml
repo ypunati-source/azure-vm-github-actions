@@ -1,13 +1,10 @@
-#Iam Just Adding it for Debugging Issue"
+# I am just adding it for debugging issue
 name: Deploy Azure VM from GitHub Actions
 
-#on:
-  #workflow_dispatch:
 on:
   push:
     branches:
-    - master
-
+      - master
 
 jobs:
   deploy-vm:
@@ -23,7 +20,7 @@ jobs:
 
       - name: Create resource group
         run: |
-          az group create --name github-rg --location eastus
+          az group create --name github-rg --location centralus
 
       - name: Create virtual machine
         run: |
@@ -32,4 +29,5 @@ jobs:
             --name github-vm \
             --image Ubuntu2204 \
             --admin-username azureuser \
+            --size Standard_B1s \
             --generate-ssh-keys
