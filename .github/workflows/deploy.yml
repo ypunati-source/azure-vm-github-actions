@@ -1,4 +1,3 @@
-# I am just adding it for debugging issue
 name: Deploy Azure VM from GitHub Actions
 
 on:
@@ -18,9 +17,20 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Create resource group
+      # Only create resource group if it does NOT already exist
+      - name: Check if resource group exists
+        id: check_rg
         run: |
-          az group create --name github-rg --location centralus
+          if az group show --name github-rg &> /dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create resource group (only if missing)
+        if: steps.check_rg.outputs.exists == 'false'
+        run: |
+          az group create --name github-rg --location eastus
 
       - name: Create virtual machine
         run: |
